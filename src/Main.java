@@ -9,7 +9,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("newui.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("ui.fxml"));
         primaryStage.setTitle("SubdomainToolkit Alpha v0.1");
         primaryStage.setScene(new Scene(root, 800, 400));
         primaryStage.setResizable(false);
