@@ -9,9 +9,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("子域名查询");
-        primaryStage.setScene(new Scene(root, 780, 400));
+        Parent root = FXMLLoader.load(getClass().getResource("newui.fxml"));
+        primaryStage.setTitle("SubdomainToolkit Alpha v0.1");
+        primaryStage.setScene(new Scene(root, 800, 400));
         primaryStage.setResizable(false);
         primaryStage.show();
     }

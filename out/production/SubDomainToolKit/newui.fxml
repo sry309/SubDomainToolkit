@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+    <tabs>
+        <Tab text="子域名">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <TextField fx:id="domainText" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="280.0" />
+                        <TextArea fx:id="subResultArea" editable="false" layoutX="10.0" layoutY="50.0" prefHeight="280.0" prefWidth="380.0" wrapText="true" />
+                        <Button fx:id="searchBtn" layoutX="310.0" layoutY="10.0" mnemonicParsing="false" onAction="#SubdomainBtnClick" prefHeight="30.0" prefWidth="80.0" text="搜索" />
+                        <Button fx:id="saveBtn" layoutX="689.0" layoutY="10.0" mnemonicParsing="false" onAction="#onSaveBtnClick" prefHeight="30.0" prefWidth="80.0" text="保存" />
+                  <TextArea fx:id="resultArea1" editable="false" layoutX="409.0" layoutY="50.0" prefHeight="280.0" prefWidth="380.0" wrapText="true" />
+                  <Button fx:id="saveBtn2" layoutX="554.0" layoutY="10.0" mnemonicParsing="false" onAction="#onSaveBtnClick" prefHeight="30.0" prefWidth="97.0" text="一键复制ip" />
+                  <Button fx:id="copySubBtn" layoutX="409.0" layoutY="10.0" mnemonicParsing="false" onAction="#copySubBtnClick" prefHeight="30.0" prefWidth="112.0" text="一键复制子域名" />
+                  <Label fx:id="ErrorLable" layoutX="10.0" layoutY="336.0" prefHeight="25.0" prefWidth="780.0" />
+                    </children>
+                </AnchorPane>
+            </content>
+        </Tab>
+        <Tab text="whois">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="searchBtn1" layoutX="229.0" layoutY="10.0" mnemonicParsing="false" onAction="#WhoisBtnClick" prefHeight="30.0" prefWidth="80.0" text="查询" />
+                  <Button fx:id="saveBtn1" layoutX="338.0" layoutY="10.0" mnemonicParsing="false" onAction="#onSaveBtnClick" prefHeight="30.0" prefWidth="80.0" text="保存" />
+                  <TextArea fx:id="whoisResultArea" editable="false" layoutX="10.0" layoutY="50.0" prefHeight="300.0" prefWidth="780.0" wrapText="true" />
+                  <TextField fx:id="whoisDomainText" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="200.0" />
+               </children></AnchorPane>
+            </content>
+        </Tab>
+        <Tab text="robots.txt">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+        </Tab>
+        <Tab text="端口服务">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+        </Tab>
+        <Tab text="敏感文件检测">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+        </Tab>
+    </tabs>
+</TabPane>
