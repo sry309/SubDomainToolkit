@@ -1,6 +1,5 @@
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -34,19 +33,20 @@ public class Controller {
     private TextArea subResultArea;
 
     @FXML
+    private TextArea ipResultArea;
+
+    @FXML
     private TextField whoisDomainText;
 
     @FXML
     private TextArea whoisResultArea;
 
     @FXML
-    private Label ErrorLable;
+    private Label errorLable;
+
 
     @FXML
-    private Button copySubBtn;
-
-    @FXML
-    public void SubdomainBtnClick() {
+    public void subSearchBtnClick() {
         subResultArea.setText(null);
         whoisDomainText.setText(domainText.getText());
         String domain = domainText.getText();
@@ -68,17 +68,17 @@ public class Controller {
             get.join();
             post.join();
             String result=get.result+post.result;
-            DelDuplicateDomain(result);
+            ArrayList<Object> newResult=delDuplicate(result,"[0-9a-zA-z]+\\.",domain);
+            subResultArea.setText(newResult.toString().replace(",","\n").replace("[","").replace("]","").replace(" ",""));
+            getIp(newResult.toString().replace(",","%0D%0A").replace("[","").replace("]","").replace(" ",""));
         } catch (InterruptedException e){
             e.printStackTrace();
         }
 
-
-
     }
 
     @FXML
-    public void onSaveBtnClick() {
+    public void saveBtnClick() {
 
         FileChooser fileChooser = new FileChooser();
         Stage s = new Stage();
@@ -99,7 +99,7 @@ public class Controller {
     }
 
     @FXML
-    public void WhoisBtnClick() {
+    public void whoisBtnClick() {
         String domain = whoisDomainText.getText();
         String whoisurl = "http://whois.263.tw/weixinindex.php?domain="+domain;
         HtmlGet get=new HtmlGet(whoisurl);
@@ -116,41 +116,55 @@ public class Controller {
     }
 
     @FXML
+    private void saveWhoisBtnClick() {
+
+    }
+
+    @FXML
     private void copySubBtnClick() {
         StringSelection stsel = new StringSelection(subResultArea.getText());
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stsel, stsel);
     }
-
-
-    public void DelDuplicateDomain(String result) {
-
-        String domain = domainText.getText();
-        Pattern pattern = Pattern.compile("[0-9a-zA-z]+\\." + domain);
-        Matcher matcher = pattern.matcher(result);
-        ArrayList<String> subdomain = new ArrayList<>();
-        ArrayList<Object> newsubdomain = new ArrayList<>();
-
-        while (matcher.find()) {
-            subdomain.add(matcher.group(0));
-        }
-
-        Set set = new HashSet<>();
-
-
-        for (Iterator iter = subdomain.iterator(); iter.hasNext(); ) {
-            Object element = iter.next();
-            if (set.add(element)) {
-                newsubdomain.add(element);
-            }
-        }
-        subResultArea.setText(newsubdomain.toString().replace(",","\n").replace("[","").replace("]","").replace(" ",""));
-        if (newsubdomain.toString().length() == 2) {
-            subResultArea.setText("抱歉，没有搜索到" + domain + "的相关子域名数据。");
-        }
-
-
+    @FXML
+    private void copyIpBtnClick() {
+        StringSelection stsel = new StringSelection(ipResultArea.getText());
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stsel, stsel);
     }
 
+
+    public void getIp(String site) {
+        String ipurl="http://i.links.cn/websip.asp?links="+site;
+        HtmlGet ipget = new HtmlGet(ipurl);
+        ipget.start();
+        try {
+            ipget.join();
+            ArrayList<Object> iplist = delDuplicate(ipget.result, "\\d+\\.\\d+\\.\\d+\\.\\d+", "");
+            ipResultArea.setText(iplist.toString().replace(",","\n").replace("[","").replace("]","").replace(" ",""));
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Object> delDuplicate(String result, String regexp, String content) {
+
+        Pattern pattern = Pattern.compile(regexp+content);
+        Matcher matcher = pattern.matcher(result);
+        ArrayList<String> oldResult = new ArrayList<>();
+        ArrayList<Object> newResult = new ArrayList<>();
+        while (matcher.find()) {
+            oldResult.add(matcher.group(0));
+        }
+        Set set = new HashSet<>();
+        for (Iterator iter = oldResult.iterator(); iter.hasNext(); ) {
+            Object element = iter.next();
+            if (set.add(element)) {
+                newResult.add(element);
+            }
+        }
+
+        return newResult;
+
+    }
 
     class HtmlPost extends Thread {
 
@@ -174,7 +188,7 @@ public class Controller {
                 HttpEntity entity = response.getEntity();
                 this.result = EntityUtils.toString(entity,"UTF-8");
             } catch (IOException e){
-                ErrorLable.setText("抱歉，网络出错。");
+                errorLable.setText("抱歉，网络出错。");
             }
 
         }
@@ -196,7 +210,7 @@ public class Controller {
                 HttpEntity entity = response.getEntity();
                 this.result = EntityUtils.toString(entity,"UTF-8");
             } catch (IOException e){
-                ErrorLable.setText("抱歉，网络出错。");
+                errorLable.setText("抱歉，网络出错。");
             }
 
         }
