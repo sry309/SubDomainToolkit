@@ -1,6 +1,7 @@
 import javafx.fxml.FXML;
 
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -42,38 +43,47 @@ public class Controller {
     private TextArea whoisResultArea;
 
     @FXML
-    private Label errorLable;
+    private Labeled errorLable;
 
+    @FXML
+    private Labeled subDomainLable;
 
     @FXML
     public void subSearchBtnClick() {
         subResultArea.setText(null);
         whoisDomainText.setText(domainText.getText());
         String domain = domainText.getText();
-        String geturl="http://www.5118.com/subdomains/";
-        String posturl="http://i.links.cn/subdomain/";
+        if (domain.length()>3) {
+            String geturl="http://www.5118.com/subdomains/";
+            String posturl="http://i.links.cn/subdomain/";
 
-        List<BasicNameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("domain", domain));
-        parameters.add(new BasicNameValuePair("b2", "1"));
-        parameters.add(new BasicNameValuePair("b3", "1"));
-        parameters.add(new BasicNameValuePair("b4", "1"));
+            List<BasicNameValuePair> parameters = new ArrayList<>();
+            parameters.add(new BasicNameValuePair("domain", domain));
+            parameters.add(new BasicNameValuePair("b2", "1"));
+            parameters.add(new BasicNameValuePair("b3", "1"));
+            parameters.add(new BasicNameValuePair("b4", "1"));
 
-        HtmlGet get=new HtmlGet(geturl);
-        HtmlPost post=new HtmlPost(posturl,parameters);
+            HtmlGet get=new HtmlGet(geturl);
+            HtmlPost post=new HtmlPost(posturl,parameters);
 
-        try {
-            get.start();
-            post.start();
-            get.join();
-            post.join();
-            String result=get.result+post.result;
-            ArrayList<Object> newResult=delDuplicate(result,"[0-9a-zA-z]+\\.",domain);
-            subResultArea.setText(newResult.toString().replace(",","\n").replace("[","").replace("]","").replace(" ",""));
-            getIp(newResult.toString().replace(",","%0D%0A").replace("[","").replace("]","").replace(" ",""));
-        } catch (InterruptedException e){
-            e.printStackTrace();
+            try {
+                get.start();
+                post.start();
+                get.join();
+                post.join();
+                String result=get.result+post.result;
+                ArrayList<Object> newResult=delDuplicate(result,"[0-9a-zA-z]+\\.",domain);
+                System.out.print(newResult.size());
+                subResultArea.setText(newResult.toString().replace(",","\n").replace("[","").replace("]","").replace(" ",""));
+
+                getIp(newResult.toString().replace(",","%0D%0A").replace("[","").replace("]","").replace(" ",""));
+
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
+        else subDomainLable.setText("请先输入域名!");
+
 
     }
 
@@ -133,6 +143,7 @@ public class Controller {
 
 
     public void getIp(String site) {
+
         String ipurl="http://i.links.cn/websip.asp?links="+site;
         HtmlGet ipget = new HtmlGet(ipurl);
         ipget.start();
